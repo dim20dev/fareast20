@@ -297,12 +297,48 @@
       background:var(--sushi-accent);
       color:white;
     }
+    
+    /* New Category Buttons */
+    .menu-category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .menu-category-button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-size: 0.9rem;
+    }
+    .menu-category-button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .menu-category-button.sushi-button {
+      color: var(--sushi-accent);
+      background: rgba(42, 127, 98, 0.1);
+    }
+    .menu-category-button.sushi-button.active {
+      background: var(--sushi-accent);
+      color: white;
+    }
+    
     .menu-category {
       margin: 2rem 0;
       background: #fff;
       border-radius: 16px;
       padding: 1.5rem;
       box-shadow: var(--shadow);
+      display: none; /* Changed from original to hide by default */
+    }
+    .menu-category.active {
+      display: block; /* Show when active */
     }
     .menu-category-title {
       font-size: 1.5rem;
@@ -310,10 +346,6 @@
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
       border-bottom: 2px solid var(--primary-light);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
     }
     .menu-items {
       display: grid;
@@ -366,34 +398,6 @@
       color: var(--sushi-accent);
     }
     
-    /* Show more/less functionality */
-    .menu-category-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease, padding 0.3s ease;
-    }
-    .menu-category-content.expanded {
-      max-height: 5000px;
-      padding-top: 1rem;
-    }
-    .menu-category-title::after {
-      content: '+';
-      font-size: 1.5rem;
-      transition: transform 0.3s;
-    }
-    .menu-category-title.expanded::after {
-      content: '-';
-      transform: rotate(0deg);
-    }
-    
-    /* Mobile menu items */
-    .mobile-menu-item {
-      display: none;
-    }
-
     /* Other content */
     .about, .contact, .location {
       background:#fff;
@@ -596,25 +600,22 @@
       .menu-item-price {
         margin-left: auto;
       }
-      /* Show only first 3 items by default */
-      .menu-category-content {
-        display: block;
-        max-height: none;
+      /* Category buttons scroll on mobile */
+      .menu-category-buttons {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 10px;
+        scrollbar-width: thin;
       }
-      .menu-item {
-        display: none;
+      .menu-category-buttons::-webkit-scrollbar {
+        height: 5px;
       }
-      .menu-item:nth-child(-n+3) {
-        display: flex;
+      .menu-category-buttons::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
       }
-      .menu-category-content.expanded .menu-item {
-        display: flex;
-      }
-      .menu-category-title::after {
-        content: '+';
-      }
-      .menu-category-title.expanded::after {
-        content: '-';
+      .menu-category-button {
+        white-space: nowrap;
       }
     }
     @media (max-width:600px) {
@@ -786,177 +787,181 @@
       
       <!-- Chinese Menu -->
       <div class="menu-section" id="chinese-menu">
+        <!-- Category Buttons -->
+        <div class="menu-category-buttons" id="chinese-category-buttons">
+          <button class="menu-category-button active" data-category="starters">Starters</button>
+          <button class="menu-category-button" data-category="soups">Soups</button>
+          <button class="menu-category-button" data-category="tofu-vegan">Tofu & Vegan</button>
+          <button class="menu-category-button" data-category="main-dishes">Main Dishes</button>
+          <button class="menu-category-button" data-category="noodles-rice">Noodles & Rice</button>
+          <button class="menu-category-button" data-category="sides">Side Dishes</button>
+        </div>
+        
         <!-- Starters -->
-        <div class="menu-category">
+        <div class="menu-category active" id="starters">
           <h3 class="menu-category-title" data-i18n="starters">Starters</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Vegetable Spring Rolls" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">1.</span> <span data-i18n="dish1">Vegetable Spring Rolls</span></span>
-                    <span class="menu-item-price">€3.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish1_desc">Served with Sweet & Sour sauce</div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Vegetable Spring Rolls" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">1.</span> <span>Vegetable Spring Rolls</span></span>
+                  <span class="menu-item-price">€3.00</span>
+                </div>
+                <div class="menu-item-desc">Served with Sweet & Sour sauce</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80" alt="Japanese Dumplings" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">2.</span> <span>Japanese Dumplings</span></span>
+                  <span class="menu-item-price">€5.00-€6.50</span>
+                </div>
+                <div class="menu-item-desc">Deep fried or steamed (Vegetable/Chicken/Prawn)</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Aromatic Duck" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">3.</span> <span>Aromatic Duck 1/4</span></span>
+                  <span class="menu-item-price">€11.00</span>
+                </div>
+                <div class="menu-item-desc">1/4 Duck, Spring Onion, Cucumber, Carrot Pancakes & Hoisin Sauce</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=600&q=80" alt="Spare Ribs" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">4.</span> <span>Spare Ribs</span></span>
+                  <span class="menu-item-price">€5.50</span>
+                </div>
+                <div class="menu-item-desc">With choice of sauce: BBQ / Salt Chili / Sweet Chili</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Prawn Tempura" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">5.</span> <span>Prawn Tempura</span></span>
+                  <span class="menu-item-price">€6.50</span>
+                </div>
+                <div class="menu-item-desc">Deep Fried Balanced Prawns with Teriyaki sauce</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80" alt="Crispy Prawn Toast" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">6.</span> <span>Crispy Prawn Toast</span></span>
+                  <span class="menu-item-price">€6.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80" alt="Japanese Dumplings" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">2.</span> <span data-i18n="dish2">Japanese Dumplings</span></span>
-                    <span class="menu-item-price">€5.00-€6.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish2_desc">Deep Fried or steamed (Vegetable/Chicken/Prawn)</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Chicken Satay" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">7.</span> <span>Chicken Satay</span></span>
+                  <span class="menu-item-price">€6.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Aromatic Duck" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">3.</span> <span data-i18n="dish3">Aromatic Duck 1/4</span></span>
-                    <span class="menu-item-price">€11.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish3_desc">Spring Onion, Cucumber, Carrot Pancakes & Hoisin Sauce</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=600&q=80" alt="Crispy Calamari" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">8.</span> <span>Crispy Calamari</span></span>
+                  <span class="menu-item-price">€6.70</span>
                 </div>
+                <div class="menu-item-desc">Deep fried calamari with Japanese breadcrumbs with Sweet Chili sauce</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=600&q=80" alt="Spare Ribs" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">4.</span> <span data-i18n="dish4">Spare Ribs</span></span>
-                    <span class="menu-item-price">€5.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish4_desc">With choice of sauce: BBQ / Salt Chili / Sweet Chili</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Peking Duck Bao Buns" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">9.</span> <span>Peking Duck Bao Buns</span></span>
+                  <span class="menu-item-price">€6.50</span>
                 </div>
+                <div class="menu-item-desc">Spring onions, pepper, cucumber, Peking sauce</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Prawn Tempura" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">5.</span> <span>Prawn Tempura</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
-                  <div class="menu-item-desc">Deep fried Japanese bread crumb with Teriyaki sauce</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80" alt="Crispy Pork Belly Bao Buns" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">10.</span> <span>Crispy Pork Belly Bao Buns</span></span>
+                  <span class="menu-item-price">€6.50</span>
                 </div>
+                <div class="menu-item-desc">Asian stew salads, spring onion, crunchy onion chunks</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80" alt="Crispy Prawn Toast" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">6.</span> <span>Crispy Prawn Toast</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=600&q=80" alt="Prawn Tempura Bao Buns" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">11.</span> <span>Prawn Tempura Bao Buns</span></span>
+                  <span class="menu-item-price">€6.50</span>
                 </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Chicken Satay" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">7.</span> <span data-i18n="dish7">Chicken Satay</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=600&q=80" alt="Crispy Calamari" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">8.</span> <span>Crispy Calamari</span></span>
-                    <span class="menu-item-price">€6.70</span>
-                  </div>
-                  <div class="menu-item-desc">Crispy deep fried with chopped mixed vegetables, seasoned with olive, salt & pepper</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80" alt="Peking Duck Bao Buns" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">9.</span> <span>Peking Duck Bao Buns</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
-                  <div class="menu-item-desc">Spring onion, carrot, cucumber, Peking sauce</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80" alt="Crispy Pork Belly Bao Buns" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">10.</span> <span>Crispy Pork Belly Bao Buns</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
-                  <div class="menu-item-desc">Spring onion, cucumber, carrot, iceberg & BBQ sauce</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=600&q=80" alt="Prawn Tempura Bao Buns" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">11.</span> <span>Prawn Tempura Bao Buns</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
-                  <div class="menu-item-desc">Carrot, spring onion, cucumber, iceberg, red sauce</div>
-                </div>
+                <div class="menu-item-desc">Pre-energies for chilli sauce, spring onion, cucumber, iceberg</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- Soups -->
-        <div class="menu-category">
+        <div class="menu-category" id="soups">
           <h3 class="menu-category-title" data-i18n="soups">Soups</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Tom Yum Soup" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">12.</span> <span data-i18n="dish12">Tom Yum Soup</span></span>
-                    <span class="menu-item-price">€5.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish12_desc">Seafood, chicken or vegetable</div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Tom Yum Soup" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">12.</span> <span>Tom Yum Soup</span></span>
+                  <span class="menu-item-price">€5.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Peking Hot & Sour Soup" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">13.</span> <span data-i18n="dish13">Peking Hot & Sour Soup</span></span>
-                    <span class="menu-item-price">€5.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish13_desc">Chicken or vegetable</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Peking Hot & Sour Soup" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">13.</span> <span>Peking Hot & Sour Soup</span></span>
+                  <span class="menu-item-price">€5.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Chicken Noodle Soup" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">14.</span> <span>Chicken Noodle Soup</span></span>
-                    <span class="menu-item-price">€5.00</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Chicken Noodle Soup" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">14.</span> <span>Chicken Noodle Soup</span></span>
+                  <span class="menu-item-price">€5.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Vegetable Soup" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">15.</span> <span>Vegetable Soup</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Vegetable Soup" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">15.</span> <span>Vegetable Soup</span></span>
+                  <span class="menu-item-price">€4.50</span>
                 </div>
               </div>
             </div>
@@ -964,164 +969,157 @@
         </div>
         
         <!-- Tofu & Vegan Dishes -->
-        <div class="menu-category">
+        <div class="menu-category" id="tofu-vegan">
           <h3 class="menu-category-title">Tofu & Vegan Dishes</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Tofu Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">16.</span> <span>Tofu Dishes</span></span>
-                    <span class="menu-item-price">€9.50</span>
-                  </div>
-                  <div class="menu-item-desc">TOFU mushroom & Oyster sauce / Black Bean sauce / Sweet & Sour sauce / Curry sauce</div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Tofu Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">16.</span> <span>Tofu Dishes</span></span>
+                  <span class="menu-item-price">€9.50</span>
                 </div>
+                <div class="menu-item-desc">TOFU mushroom & Oyster sauce / Black Bean sauce / Sweet & Sour sauce / Curry sauce</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Vegan Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">17.</span> <span>Vegan Dishes</span></span>
-                    <span class="menu-item-price">€10.50</span>
-                  </div>
-                  <div class="menu-item-desc">All dishes are served with steamed rice</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Vegan Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">17.</span> <span>Vegan Dishes</span></span>
+                  <span class="menu-item-price">€10.50</span>
                 </div>
+                <div class="menu-item-desc">Ginger sauce / Black Bean sauce / Szechuan</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- Main Dishes -->
-        <div class="menu-category">
+        <div class="menu-category" id="main-dishes">
           <h3 class="menu-category-title" data-i18n="main_dishes">Main Dishes</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Curry Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">18.</span> <span>Curry Dishes</span></span>
-                    <span class="menu-item-price">€10.50-€12.50</span>
-                  </div>
-                  <div class="menu-item-desc">All dishes are served with vegetables</div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Curry Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">18.</span> <span>Curry Dishes</span></span>
+                  <span class="menu-item-price">€10.50-€12.50</span>
+                </div>
+                <div class="menu-item-desc">All dishes are served with vegetables</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Sweet & Sour Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">19.</span> <span>Sweet & Sour Dishes</span></span>
+                  <span class="menu-item-price">€10.50-€12.50</span>
+                </div>
+                <div class="menu-item-desc">Includes a variety of ingredients</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Szechuan Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">20.</span> <span>Szechuan Dishes</span></span>
+                  <span class="menu-item-price">€11.50-€13.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Sweet & Sour Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">19.</span> <span data-i18n="dish19">Sweet & Sour Dishes</span></span>
-                    <span class="menu-item-price">€10.50-€12.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish19_desc">All dishes are served with vegetables</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Oyster Sauce Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">21.</span> <span>Oyster Sauce Dishes</span></span>
+                  <span class="menu-item-price">€10.50-€12.50</span>
                 </div>
+                <div class="menu-item-desc">All dishes are served with vegetables</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Szechuan Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">20.</span> <span data-i18n="dish20">Szechuan Dishes</span></span>
-                    <span class="menu-item-price">€11.50-€13.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish20_desc">Stir-fried spicy dishes served with vegetables</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Black Bean Sauce Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">22.</span> <span>Black Bean Sauce Dishes</span></span>
+                  <span class="menu-item-price">€10.50-€12.50</span>
                 </div>
+                <div class="menu-item-desc">All dishes are served with vegetables</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Oyster Sauce Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">21.</span> <span>Oyster Sauce Dishes</span></span>
-                    <span class="menu-item-price">€10.50-€12.50</span>
-                  </div>
-                  <div class="menu-item-desc">All dishes are served with vegetables</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Teriyaki Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">23.</span> <span>Teriyaki Dishes</span></span>
+                  <span class="menu-item-price">€11.00-€13.00</span>
                 </div>
+                <div class="menu-item-desc">All dishes are served with vegetables</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Black Bean Sauce Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">22.</span> <span data-i18n="dish22">Black Bean Sauce Dishes</span></span>
-                    <span class="menu-item-price">€10.50-€12.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish22_desc">All dishes are served with vegetables</div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Thai Dishes" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">24.</span> <span>Thai Dishes</span></span>
+                  <span class="menu-item-price">€11.50-€13.50</span>
                 </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Teriyaki Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">23.</span> <span data-i18n="dish23">Teriyaki Dishes</span></span>
-                    <span class="menu-item-price">€11.00-€13.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish23_desc">All dishes are served with vegetables & sesame seeds</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Thai Dishes" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">24.</span> <span>Thai Dishes</span></span>
-                    <span class="menu-item-price">€11.50-€13.50</span>
-                  </div>
-                  <div class="menu-item-desc">All dishes are served with vegetables</div>
-                </div>
+                <div class="menu-item-desc">All dishes are served with vegetables</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- Noodles & Rice -->
-        <div class="menu-category">
+        <div class="menu-category" id="noodles-rice">
           <h3 class="menu-category-title">Noodles & Rice</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Chow Mein" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">25.</span> <span>Chow Mein</span></span>
-                    <span class="menu-item-price">€9.50</span>
-                  </div>
-                  <div class="menu-item-desc">Chinese noodles served with vegetables & Oyster sauce (Served Dry or with Sauce)</div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Chow Mein" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">25.</span> <span>Chow Mein</span></span>
+                  <span class="menu-item-price">€9.50</span>
+                </div>
+                <div class="menu-item-desc">Choices include served with vegetables & Oyster sauce (Beef/Chicken), Served Dry or with Sauce</div>
+              </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="House Special Chow Mein" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">26.</span> <span>House Special Chow Mein</span></span>
+                  <span class="menu-item-price">€11.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="House Special Chow Mein" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">26.</span> <span>House Special Chow Mein</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Fried Rice" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">27.</span> <span>Fried Rice</span></span>
+                  <span class="menu-item-price">€9.50</span>
                 </div>
+                <div class="menu-item-desc">All dishes include sweet and spicy vegetables</div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Fried Rice" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">27.</span> <span>Fried Rice</span></span>
-                    <span class="menu-item-price">€9.50</span>
-                  </div>
-                  <div class="menu-item-desc">All dishes include seasonal vegetables</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Far East Special Fried Rice" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">28.</span> <span>Far East Special Fried Rice</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Far East Special Fried Rice" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">28.</span> <span>Far East Special Fried Rice</span></span>
+                  <span class="menu-item-price">€11.50</span>
                 </div>
               </div>
             </div>
@@ -1129,143 +1127,41 @@
         </div>
         
         <!-- Sides -->
-        <div class="menu-category">
+        <div class="menu-category" id="sides">
           <h3 class="menu-category-title">Side Dishes</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">29.</span> <span>Chips / Salt & Pepper Chips</span></span>
-                    <span class="menu-item-price">€3.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">30.</span> <span>Prawn Crackers</span></span>
-                    <span class="menu-item-price">€2.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">31.</span> <span>Egg Fried Rice</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">32.</span> <span>Steamed Rice</span></span>
-                    <span class="menu-item-price">€3.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">33.</span> <span>Tempura Vegetables</span></span>
-                    <span class="menu-item-price">€5.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">34.</span> <span>Mixed Vegetables</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">35.</span> <span>Onion Rings with Sweet & Sour sauce</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">29.</span> <span>Chips / Prawn Crackers</span></span>
+                  <span class="menu-item-price">€3.50 / €2.50</span>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        
-        <!-- Specials -->
-        <div class="menu-category">
-          <h3 class="menu-category-title">Special Dishes</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="The Spice Bag" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">36.</span> <span>The Spice Bag</span></span>
-                    <span class="menu-item-price">€9.50</span>
-                  </div>
-                  <div class="menu-item-desc">Seasoned chicken, chips & veg with curry sauce</div>
+            
+            <div class="menu-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">30.</span> <span>Egg Fried Rice / Vegetable Fried Rice</span></span>
+                  <span class="menu-item-price">€4.50 / €4.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Honey Chilli Chicken" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">37.</span> <span>Honey Chilli Chicken</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
-                  <div class="menu-item-desc">Honey with a little sweet, topped with spring onion & sesame seeds</div>
+            </div>
+            
+            <div class="menu-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">31.</span> <span>Steamed Rice / Mixed Vegetables</span></span>
+                  <span class="menu-item-price">€3.50 / €4.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Lemon Chicken" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">38.</span> <span data-i18n="dish23">Lemon Chicken</span></span>
-                    <span class="menu-item-price">€11.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="dish23_desc">Lemon chicken pieces, flavoured in a citrus lemon sauce</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Wings Portion" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">39.</span> <span>Wings Portion (6pcs)</span></span>
-                    <span class="menu-item-price">€6.50</span>
-                  </div>
-                  <div class="menu-item-desc">Choice of: Sweet Chilli / Hot / BBQ</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Fish Polo" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">40.</span> <span>Fish Polo</span></span>
-                    <span class="menu-item-price">€13.50</span>
-                  </div>
-                  <div class="menu-item-desc">Salmon with calamari, spring onion, mango, chilli garlic sauce, pickling cucumber, sesame seeds, crispy onion with Jasmine or Brown rice</div>
-                </div>
-              </div>
-              
-              <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Teriyaki Chicken Polo" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">41.</span> <span>Teriyaki Chicken Polo</span></span>
-                    <span class="menu-item-price">€12.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">32.</span> <span>Chicken Wings with Sweet & Sour sauce</span></span>
+                  <span class="menu-item-price">€6.50</span>
                 </div>
               </div>
             </div>
@@ -1275,230 +1171,244 @@
       
       <!-- Sushi Menu -->
       <div class="menu-section hidden" id="sushi-menu">
+        <!-- Category Buttons -->
+        <div class="menu-category-buttons" id="sushi-category-buttons">
+          <button class="menu-category-button sushi-button active" data-category="hoso-maki">Hoso Maki Rolls</button>
+          <button class="menu-category-button sushi-button" data-category="maki-rolls">Maki Rolls</button>
+          <button class="menu-category-button sushi-button" data-category="nigiri-rolls">Nigiri Rolls</button>
+          <button class="menu-category-button sushi-button" data-category="hot-rolls">Hot Rolls</button>
+          <button class="menu-category-button sushi-button" data-category="sushi-platters">Sushi Platters</button>
+          <button class="menu-category-button sushi-button" data-category="allergy-info">Allergy Info</button>
+        </div>
+        
         <!-- Hoso Maki Rolls -->
-        <div class="menu-category">
-          <h3 class="menu-category-title" data-i18n="hoso_maki">Hoso Maki Rolls (All 8pcs)</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Far East California Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">101.</span> <span data-i18n="sushi101">Far East California Roll</span></span>
-                    <span class="menu-item-price">€9.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi101_desc">Cucumber, crabstick, carrot, avocado with caviar & Japanese mayo on top</div>
+        <div class="menu-category active" id="hoso-maki">
+          <h3 class="menu-category-title">Hoso Maki Rolls (All 8pcs)</h3>
+          <div class="menu-items">
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Far East California Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">101.</span> <span>Far East California Roll</span></span>
+                  <span class="menu-item-price">€9.50</span>
                 </div>
+                <div class="menu-item-desc">Cucumber, crabstick, carrot, avocado with caviar & Japanese mayo on top</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Dragon Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">102.</span> <span data-i18n="sushi102">Dragon Roll</span></span>
-                    <span class="menu-item-price">€12.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi102_desc">Cream cheese, tempura prawn, cucumber with avocado, eel sauce & sesame seeds on top</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Dragon Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">102.</span> <span>Dragon Roll</span></span>
+                  <span class="menu-item-price">€12.00</span>
                 </div>
+                <div class="menu-item-desc">Cream cheese, tempura prawn, cucumber with avocado, eel sauce & sesame seeds on top</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Crunchy Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">103.</span> <span data-i18n="sushi103">Crunchy Roll</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi103_desc">Tempura prawn, cucumber, avocado with tempura flakes on top</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Crunchy Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">103.</span> <span>Crunchy Roll</span></span>
+                  <span class="menu-item-price">€11.50</span>
                 </div>
+                <div class="menu-item-desc">Tempura prawn, cucumber, avocado with tempura flakes on top</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Ebi Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">104.</span> <span data-i18n="sushi104">Ebi Roll</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi104_desc">Ebi prawn, avocado, cucumber with tempura flakes on top</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Ebi Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">104.</span> <span>Ebi Roll</span></span>
+                  <span class="menu-item-price">€11.50</span>
                 </div>
+                <div class="menu-item-desc">Ebi prawn, avocado, cucumber with tempura flakes on top</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Spicy Tuna Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">105.</span> <span data-i18n="sushi105">Spicy Tuna Roll</span></span>
-                    <span class="menu-item-price">€12.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi105_desc">Fresh chopped tuna, cucumber, spicy mayo, togarashi, fresh onion (sesame seeds & togarashi on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Spicy Tuna Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">105.</span> <span>Spicy Tuna Roll</span></span>
+                  <span class="menu-item-price">€12.50</span>
                 </div>
+                <div class="menu-item-desc">Fresh chopped tuna, cucumber, spicy mayo, togarashi, fresh onion (sesame seeds & togarashi on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Vegetable Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">106.</span> <span data-i18n="sushi106">Vegetable Roll</span></span>
-                    <span class="menu-item-price">€8.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi106_desc">Avocado, mango, carrot, cucumber (sesame seeds on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Vegetable Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">106.</span> <span>Vegetable Roll</span></span>
+                  <span class="menu-item-price">€8.50</span>
                 </div>
+                <div class="menu-item-desc">Avocado, mango, carrot, cucumber (sesame seeds on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Philadelphia Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">107.</span> <span data-i18n="sushi107">Philadelphia Roll</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi107_desc">Cream cheese, avocado, fresh salmon (fresh salmon on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Philadelphia Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">107.</span> <span>Philadelphia Roll</span></span>
+                  <span class="menu-item-price">€11.50</span>
                 </div>
+                <div class="menu-item-desc">Cream cheese, avocado, fresh salmon (fresh salmon on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Spicy Salmon Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">108.</span> <span data-i18n="sushi108">Spicy Salmon Roll</span></span>
-                    <span class="menu-item-price">€12.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi108_desc">Salmon tempura, avocado, cream cheese (fresh salmon, spicy mayo, caviar & chives on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Spicy Salmon Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">108.</span> <span>Spicy Salmon Roll</span></span>
+                  <span class="menu-item-price">€12.50</span>
                 </div>
+                <div class="menu-item-desc">Salmon tempura, avocado, cream cheese (fresh salmon, spicy mayo, caviar & chives on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Salmon Teriyaki Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">109.</span> <span data-i18n="sushi109">Salmon Teriyaki Roll</span></span>
-                    <span class="menu-item-price">€12.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi109_desc">Fried salmon, avocado, carrot (caviar, chives & teriyaki sauce on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Salmon Teriyaki Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">109.</span> <span>Salmon Teriyaki Roll</span></span>
+                  <span class="menu-item-price">€12.50</span>
                 </div>
+                <div class="menu-item-desc">Fried salmon, avocado, carrot (caviar, chives & teriyaki sauce on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Chef's Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">110.</span> <span data-i18n="sushi110">Chef's Roll</span></span>
-                    <span class="menu-item-price">€13.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi110_desc">Crabstick, carrot, avocado, cucumber, mango, cream cheese (crab shell, caviar & spring onion on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1617196035154-1e1e6b01b5fa?auto=format&fit=crop&w=600&q=80" alt="Chef's Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">110.</span> <span>Chef's Roll</span></span>
+                  <span class="menu-item-price">€13.50</span>
                 </div>
+                <div class="menu-item-desc">Crabstick, carrot, avocado, cucumber, mango, cream cheese (crab shell, caviar & spring onion on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Far East Caterpillar Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">111.</span> <span data-i18n="sushi111">Far East Caterpillar Roll</span></span>
-                    <span class="menu-item-price">€13.50</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi111_desc">Cream cheese, eel, cucumber, ebi prawn (avocado, eel sauce & caviar on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Far East Caterpillar Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">111.</span> <span>Far East Caterpillar Roll</span></span>
+                  <span class="menu-item-price">€13.50</span>
                 </div>
+                <div class="menu-item-desc">Cream cheese, eel, cucumber, ebi prawn (avocado, eel sauce & caviar on top)</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- Maki Rolls -->
-        <div class="menu-category">
-          <h3 class="menu-category-title" data-i18n="maki_rolls">Maki Rolls (All 6pcs)</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=600&q=80" alt="Cucumber Maki" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">112.</span> <span data-i18n="sushi112">Cucumber Maki</span></span>
-                    <span class="menu-item-price">€3.00</span>
-                  </div>
+        <div class="menu-category" id="maki-rolls">
+          <h3 class="menu-category-title">Maki Rolls (All 6pcs)</h3>
+          <div class="menu-items">
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=600&q=80" alt="Tuna Maki" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">112.</span> <span>Tuna Maki</span></span>
+                  <span class="menu-item-price">€5.50</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Salmon Maki" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">113.</span> <span data-i18n="sushi113">Salmon Maki</span></span>
-                    <span class="menu-item-price">€5.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Cucumber Maki" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">113.</span> <span>Cucumber Maki</span></span>
+                  <span class="menu-item-price">€3.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=600&q=80" alt="Crabstick Maki" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">114.</span> <span data-i18n="sushi114">Crabstick Maki</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=600&q=80" alt="Salmon Maki" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">114.</span> <span>Salmon Maki</span></span>
+                  <span class="menu-item-price">€5.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Avocado Maki" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">115.</span> <span data-i18n="sushi115">Avocado Maki</span></span>
-                    <span class="menu-item-price">€4.00</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Crabstick Maki" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">115.</span> <span>Crabstick Maki</span></span>
+                  <span class="menu-item-price">€4.00</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=600&q=80" alt="Avocado Maki" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">116.</span> <span>Avocado Maki</span></span>
+                  <span class="menu-item-price">€4.00</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- Night Rolls -->
-        <div class="menu-category">
-          <h3 class="menu-category-title">Night Rolls (All 3pcs)</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item sushi-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">116.</span> <span>Avocado Night</span></span>
-                    <span class="menu-item-price">€3.50</span>
-                  </div>
+        <!-- Nigiri Rolls -->
+        <div class="menu-category" id="nigiri-rolls">
+          <h3 class="menu-category-title">Nigiri Rolls (All 3pcs)</h3>
+          <div class="menu-items">
+            <div class="menu-item sushi-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">117.</span> <span>Avocado Nigiri</span></span>
+                  <span class="menu-item-price">€3.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">117.</span> <span>Salmon Night</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">118.</span> <span>Salmon Nigiri</span></span>
+                  <span class="menu-item-price">€3.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">118.</span> <span>Tuna Night</span></span>
-                    <span class="menu-item-price">€4.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">119.</span> <span>Tuna Nigiri</span></span>
+                  <span class="menu-item-price">€4.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">119.</span> <span>Crabstick Night</span></span>
-                    <span class="menu-item-price">€4.00</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">120.</span> <span>Crabstick Nigiri</span></span>
+                  <span class="menu-item-price">€3.00</span>
                 </div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">120.</span> <span>Eel Night</span></span>
-                    <span class="menu-item-price">€5.50</span>
-                  </div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">121.</span> <span>Eel Nigiri</span></span>
+                  <span class="menu-item-price">€4.00</span>
                 </div>
               </div>
             </div>
@@ -1506,100 +1416,94 @@
         </div>
         
         <!-- Hot Rolls -->
-        <div class="menu-category">
+        <div class="menu-category" id="hot-rolls">
           <h3 class="menu-category-title">Hot Rolls (All 8pcs)</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Salmon Tempura Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">121.</span> <span>Salmon Tempura Roll</span></span>
-                    <span class="menu-item-price">€11.50</span>
-                  </div>
-                  <div class="menu-item-desc">Salmon tempura, avocado (tempura flakes, sesame seeds & eel sauce on top)</div>
+          <div class="menu-items">
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Salmon Tempura Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">122.</span> <span>Salmon Tempura Roll</span></span>
+                  <span class="menu-item-price">€11.50</span>
                 </div>
+                <div class="menu-item-desc">Salmon tempura, avocado (tempura flakes, sesame seeds & eel sauce on top)</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Crispy Tuna Roll" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">122.</span> <span>Crispy Tuna Roll</span></span>
-                    <span class="menu-item-price">€12.50</span>
-                  </div>
-                  <div class="menu-item-desc">Tuna, avocado (tempura flakes & spicy mayo on top)</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Crispy Tuna Roll" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">123.</span> <span>Crispy Tuna Roll</span></span>
+                  <span class="menu-item-price">€12.50</span>
                 </div>
+                <div class="menu-item-desc">Tuna, avocado (tempura flakes & spicy mayo on top)</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- Sushi Platters -->
-        <div class="menu-category">
-          <h3 class="menu-category-title" data-i18n="sushi_platters">Sushi Platters</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Fusion Combination" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">123.</span> <span data-i18n="sushi124">Fusion Combination 24pcs</span></span>
-                    <span class="menu-item-price">€32.00</span>
-                  </div>
-                  <div class="menu-item-desc" data-i18n="sushi124_desc">California Rolls, Vegetable Rolls, Crunchy Rolls</div>
+        <div class="menu-category" id="sushi-platters">
+          <h3 class="menu-category-title">Sushi Platters</h3>
+          <div class="menu-items">
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Fusion Combination" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">124.</span> <span>Fusion Combination 24pcs</span></span>
+                  <span class="menu-item-price">€32.00</span>
                 </div>
+                <div class="menu-item-desc">Far East California Rolls, Vegetable Rolls, Crunchy Rolls</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Far East Combination" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">124.</span> <span>Far East Combination 32pcs</span></span>
-                    <span class="menu-item-price">€42.00</span>
-                  </div>
-                  <div class="menu-item-desc">Chef's Rolls, Vegetable Rolls, Spicy Salmon Rolls, Ebi Rolls</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Far East Combination" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">125.</span> <span>Far East Combination 32pcs</span></span>
+                  <span class="menu-item-price">€42.00</span>
                 </div>
+                <div class="menu-item-desc">Chef's Rolls, Vegetable Rolls, Spicy Salmon Rolls, Ebi Rolls</div>
               </div>
-              
-              <div class="menu-item sushi-item">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Combination 48pcs" class="menu-item-img">
-                <div class="menu-item-content">
-                  <div class="menu-item-title">
-                    <span><span class="menu-item-number">125.</span> <span>Combination 48pcs</span></span>
-                    <span class="menu-item-price">€58.00</span>
-                  </div>
-                  <div class="menu-item-desc">California Rolls, Vegetable Rolls, Spicy Salmon Rolls, Ebi Rolls, Philadelphia Rolls, Caterpillar Rolls</div>
+            </div>
+            
+            <div class="menu-item sushi-item">
+              <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80" alt="Combination 48pcs" class="menu-item-img">
+              <div class="menu-item-content">
+                <div class="menu-item-title">
+                  <span><span class="menu-item-number">126.</span> <span>Combination 48pcs</span></span>
+                  <span class="menu-item-price">€58.00</span>
                 </div>
+                <div class="menu-item-desc">Far East California Rolls, Vegetable Rolls, Spicy Salmon Rolls, Ebi Rolls, Philadelphia Rolls, Far East Caterpillar Rolls</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- Allergy Information -->
-        <div class="menu-category">
+        <div class="menu-category" id="allergy-info">
           <h3 class="menu-category-title">Allergy Information</h3>
-          <div class="menu-category-content">
-            <div class="menu-items">
-              <div class="menu-item">
-                <div class="menu-item-content">
-                  <div class="menu-item-desc">
-                    <p>Please inform our staff if you have any of the following food intolerances:</p>
-                    <ul style="columns: 2; list-style-type: none; padding-left: 0;">
-                      <li>• Milk</li>
-                      <li>• Eggs</li>
-                      <li>• Peanuts</li>
-                      <li>• Fish</li>
-                      <li>• Shellfish</li>
-                      <li>• Wheat</li>
-                      <li>• Nuts</li>
-                      <li>• Soy</li>
-                      <li>• Celery</li>
-                      <li>• Sesame seeds</li>
-                      <li>• Mustard</li>
-                      <li>• Lupin</li>
-                    </ul>
-                  </div>
+          <div class="menu-items">
+            <div class="menu-item">
+              <div class="menu-item-content">
+                <div class="menu-item-desc">
+                  <p>Please inform our staff if you have any of the following food intolerances:</p>
+                  <ul style="columns: 2; list-style-type: none; padding-left: 0;">
+                    <li>• Milk</li>
+                    <li>• Eggs</li>
+                    <li>• Peanuts</li>
+                    <li>• Fish</li>
+                    <li>• Shellfish</li>
+                    <li>• Wheat</li>
+                    <li>• Nuts</li>
+                    <li>• Soy</li>
+                    <li>• Celery</li>
+                    <li>• Sesame seeds</li>
+                    <li>• Mustard</li>
+                    <li>• Lupin</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -1750,57 +1654,88 @@
         dish2: "Japanese Dumplings",
         dish2_desc: "Deep Fried or steamed (Vegetable/Chicken/Prawn)",
         dish3: "Aromatic Duck 1/4",
-        dish3_desc: "Spring Onion, Cucumber, Carrot Pancakes & Hoisin Sauce",
+        dish3_desc: "1/4 Duck, Spring Onion, Cucumber, Carrot Pancakes & Hoisin Sauce",
         dish4: "Spare Ribs",
         dish4_desc: "With choice of sauce: BBQ / Salt Chili / Sweet Chili",
-        dish5: "Prawn Crackers",
-        dish5_desc: "Light and crispy prawn crackers",
-        dish6: "Crispy Won Ton",
-        dish6_desc: "Deep fried wonton with sweet chili sauce",
+        dish5: "Prawn Tempura",
+        dish5_desc: "Deep Fried Balanced Prawns with Teriyaki sauce",
+        dish6: "Crispy Prawn Toast",
+        dish6_desc: "Shredded Chicken Satay",
         dish7: "Chicken Satay",
-        dish7_desc: "Grilled chicken skewers with peanut sauce",
-        dish8: "Salt & Pepper Squid",
-        dish8_desc: "Crispy squid with salt and pepper seasoning",
+        dish7_desc: "Served with peanut sauce",
+        dish8: "Crispy Calamari",
+        dish8_desc: "Deep fried calamari with Japanese breadcrumbs with Sweet Chili sauce",
+        dish9: "Peking Duck Bao Buns",
+        dish9_desc: "Spring onions, pepper, cucumber, Peking sauce",
+        dish10: "Crispy Pork Belly Bao Buns",
+        dish10_desc: "Asian stew salads, spring onion, crunchy onion chunks",
+        dish11: "Prawn Tempura Bao Buns",
+        dish11_desc: "Pre-energies for chilli sauce, spring onion, cucumber, iceberg",
+        
         dish12: "Tom Yum Soup",
-        dish12_desc: "Seafood, chicken or vegetable",
+        dish12_desc: "Tangy hot & sour soup",
         dish13: "Peking Hot & Sour Soup",
-        dish13_desc: "Chicken or vegetable",
-        dish14: "Chicken Sweetcorn Soup",
-        dish14_desc: "Creamy chicken and sweetcorn soup",
-        dish15: "Wonton Soup",
-        dish15_desc: "Pork wontons in clear broth",
-        dish19: "Sweet & Sour Chicken",
-        dish19_desc: "Served with vegetables",
-        dish20: "Szechuan Beef",
-        dish20_desc: "Stir-fried spicy beef with vegetables",
-        dish21: "Kung Pao Chicken",
-        dish21_desc: "Spicy stir-fried chicken with peanuts",
-        dish22: "Black Bean Sauce Beef",
-        dish22_desc: "Beef stir-fried with black bean sauce and vegetables",
-        dish23: "Lemon Chicken",
-        dish23_desc: "Crispy chicken with lemon sauce",
-        dish24: "Mongolian Lamb",
-        dish24_desc: "Tender lamb with spring onions in special sauce",
-        dish25: "Honey Garlic Chicken",
-        dish25_desc: "Chicken in sweet honey garlic sauce",
-        dish26: "Crispy Chilli Beef",
-        dish26_desc: "Crispy beef strips with sweet chili sauce",
+        dish13_desc: "Classic Chinese hot and sour soup",
+        dish14: "Chicken Noodle Soup",
+        dish14_desc: "Comforting chicken noodle soup",
+        dish15: "Vegetable Soup",
+        dish15_desc: "Light vegetable broth",
+        
+        dish16: "Tofu Dishes",
+        dish16_desc: "TOFU mushroom & Oyster sauce / Black Bean sauce / Sweet & Sour sauce / Curry sauce",
+        dish17: "Vegan Dishes",
+        dish17_desc: "Ginger sauce / Black Bean sauce / Szechuan",
+        
+        dish18: "Curry Dishes",
+        dish18_desc: "All dishes are served with vegetables",
+        dish19: "Sweet & Sour Dishes",
+        dish19_desc: "Includes a variety of ingredients",
+        dish20: "Szechuan Dishes",
+        dish20_desc: "Spicy Szechuan style dishes",
+        dish21: "Oyster Sauce Dishes",
+        dish21_desc: "All dishes are served with vegetables",
+        dish22: "Black Bean Sauce Dishes",
+        dish22_desc: "All dishes are served with vegetables",
+        dish23: "Teriyaki Dishes",
+        dish23_desc: "All dishes are served with vegetables",
+        dish24: "Thai Dishes",
+        dish24_desc: "All dishes are served with vegetables",
+        
+        dish25: "Chow Mein",
+        dish25_desc: "Choices include served with vegetables & Oyster sauce (Beef/Chicken), Served Dry or with Sauce",
+        dish26: "House Special Chow Mein",
+        dish26_desc: "Our signature chow mein dish",
+        dish27: "Fried Rice",
+        dish27_desc: "All dishes include sweet and spicy vegetables",
+        dish28: "Far East Special Fried Rice",
+        dish28_desc: "Our special fried rice with premium ingredients",
+        
+        dish29: "Chips / Prawn Crackers",
+        dish29_desc: "Side dish options",
+        dish30: "Egg Fried Rice / Vegetable Fried Rice",
+        dish30_desc: "Rice side options",
+        dish31: "Steamed Rice / Mixed Vegetables",
+        dish31_desc: "Simple side options",
+        dish32: "Chicken Wings with Sweet & Sour sauce",
+        dish32_desc: "6 pieces of chicken wings",
         
         // Sushi menu translations
         hoso_maki: "Hoso Maki Rolls (All 8pcs)",
         maki_rolls: "Maki Rolls (All 6pcs)",
+        nigiri_rolls: "Nigiri Rolls (All 3pcs)",
+        hot_rolls: "Hot Rolls (All 8pcs)",
         sushi_platters: "Sushi Platters",
         
         sushi101: "Far East California Roll",
         sushi101_desc: "Cucumber, crabstick, carrot, avocado with caviar & Japanese mayo on top",
         sushi102: "Dragon Roll",
         sushi102_desc: "Cream cheese, tempura prawn, cucumber with avocado, eel sauce & sesame seeds on top",
-        sushi103: "Rainbow Roll",
-        sushi103_desc: "California roll topped with assorted sashimi",
-        sushi104: "Spicy Tuna Roll",
-        sushi104_desc: "Spicy tuna with cucumber and avocado",
-        sushi105: "Spicy Salmon Roll",
-        sushi105_desc: "Salmon tempura, avocado, cream cheese (fresh salmon, spicy mayo, caviar & chives on top)",
+        sushi103: "Crunchy Roll",
+        sushi103_desc: "Tempura prawn, cucumber, avocado with tempura flakes on top",
+        sushi104: "Ebi Roll",
+        sushi104_desc: "Ebi prawn, avocado, cucumber with tempura flakes on top",
+        sushi105: "Spicy Tuna Roll",
+        sushi105_desc: "Fresh chopped tuna, cucumber, spicy mayo, togarashi, fresh onion (sesame seeds & togarashi on top)",
         sushi106: "Vegetable Roll",
         sushi106_desc: "Avocado, mango, carrot, cucumber (sesame seeds on top)",
         sushi107: "Philadelphia Roll",
@@ -1813,16 +1748,30 @@
         sushi110_desc: "Crabstick, carrot, avocado, cucumber, mango, cream cheese (crab shell, caviar & spring onion on top)",
         sushi111: "Far East Caterpillar Roll",
         sushi111_desc: "Cream cheese, eel, cucumber, ebi prawn (avocado, eel sauce & caviar on top)",
+        
         sushi112: "Tuna Maki",
         sushi113: "Cucumber Maki",
         sushi114: "Salmon Maki",
-        sushi115: "Avocado Maki",
+        sushi115: "Crabstick Maki",
+        sushi116: "Avocado Maki",
+        
+        sushi117: "Avocado Nigiri",
+        sushi118: "Salmon Nigiri",
+        sushi119: "Tuna Nigiri",
+        sushi120: "Crabstick Nigiri",
+        sushi121: "Eel Nigiri",
+        
+        sushi122: "Salmon Tempura Roll",
+        sushi122_desc: "Salmon tempura, avocado (tempura flakes, sesame seeds & eel sauce on top)",
+        sushi123: "Crispy Tuna Roll",
+        sushi123_desc: "Tuna, avocado (tempura flakes & spicy mayo on top)",
+        
         sushi124: "Fusion Combination 24pcs",
         sushi124_desc: "Far East California Rolls, Vegetable Rolls, Crunchy Rolls",
-        sushi125: "Deluxe Sushi Platter 36pcs",
-        sushi125_desc: "Assorted nigiri, sashimi and specialty rolls",
-        sushi126: "Vegetarian Platter 24pcs",
-        sushi126_desc: "Assorted vegetarian rolls and nigiri",
+        sushi125: "Far East Combination 32pcs",
+        sushi125_desc: "Chef's Rolls, Vegetable Rolls, Spicy Salmon Rolls, Ebi Rolls",
+        sushi126: "Combination 48pcs",
+        sushi126_desc: "Far East California Rolls, Vegetable Rolls, Spicy Salmon Rolls, Ebi Rolls, Philadelphia Rolls, Far East Caterpillar Rolls",
         
         form_success: "Message sent successfully!",
         form_error: "Error sending message. Please try again."
@@ -1852,60 +1801,91 @@
         
         dish1: "Λαχανικά Σπρινγκ Ρολς",
         dish1_desc: "Σερβίρονται με γλυκόξινη σάλτσα",
-        dish2: "Ιαπωνικά Ντάμπλινγκ",
+        dish2: "Ιαπωνικά Ντάμπλινγκς",
         dish2_desc: "Τηγανητά ή στον ατμό (Λαχανικά/Κοτόπουλο/Γαρίδες)",
         dish3: "Αρωματική Πάπια 1/4",
-        dish3_desc: "Φρέσκο κρεμμύδι, αγγούρι, καρότο, τηγανίτες & σάλτσα hoisin",
+        dish3_desc: "1/4 πάπια, φρέσκο κρεμμύδι, αγγούρι, τηγανίτες καρότου & σάλτσα hoisin",
         dish4: "Παϊδάκια",
         dish4_desc: "Με επιλογή σάλτσας: BBQ / Αλάτι-Τσίλι / Γλυκό Τσίλι",
-        dish5: "Κράκερς Γαρίδας",
-        dish5_desc: "Ελαφριά και τραγανά κράκερς γαρίδας",
-        dish6: "Τραγανά Won Ton",
-        dish6_desc: "Τηγανητά wonton με γλυκόπικρη σάλτσα",
+        dish5: "Γαρίδες Tempura",
+        dish5_desc: "Τηγανητές γαρίδες με σάλτσα teriyaki",
+        dish6: "Τραγανό Toast με Γαρίδες",
+        dish6_desc: "Κοτόπουλο satay σε φέτες",
         dish7: "Κοτόπουλο Satay",
-        dish7_desc: "Ψητές σουβλίτσες κοτόπουλου με σάλτσα φυστικιού",
-        dish8: "Καλαμάρι Αλάτι & Πιπέρι",
-        dish8_desc: "Τραγανό καλαμάρι με καρύκευμα αλατιού και πιπεριού",
+        dish7_desc: "Σερβίρεται με σάλτσα φυστικιού",
+        dish8: "Τραγανό Καλαμάρι",
+        dish8_desc: "Τηγανητό καλαμάρι με ιαπωνικά ψίχουλα και σάλτσα γλυκού τσίλι",
+        dish9: "Μπαο Μπουνς με Πάπια Peking",
+        dish9_desc: "Φρέσκα κρεμμυδάκια, πιπέρι, αγγούρι, σάλτσα peking",
+        dish10: "Μπαο Μπουνς με Χοιρινό",
+        dish10_desc: "Ασιατικές σαλάτες, φρέσκο κρεμμύδι, τραγανά κομμάτια κρεμμυδιού",
+        dish11: "Μπαο Μπουνς με Γαρίδες Tempura",
+        dish11_desc: "Σάλτσα τσίλι, φρέσκο κρεμμύδι, αγγούρι, μαρούλι",
+        
         dish12: "Σούπα Tom Yum",
-        dish12_desc: "Θαλασσινά, κοτόπουλο ή λαχανικά",
+        dish12_desc: "Πικάντικη ξινή σούπα",
         dish13: "Πεκινέζικη Πικάντικη Σούπα",
-        dish13_desc: "Κοτόπουλο ή λαχανικά",
-        dish14: "Σούπα Κοτόπουλου με Καλαμπόκι",
-        dish14_desc: "Κρεμώδης σούπα κοτόπουλου με γλυκό καλαμπόκι",
-        dish15: "Σούπα Wonton",
-        dish15_desc: "Wonton με χοιρινό σε καθαρό ζωμό",
-        dish19: "Γλυκόξινο Κοτόπουλο",
-        dish19_desc: "Σερβίρεται με λαχανικά",
-        dish20: "Μοσχάρι Szechuan",
-        dish20_desc: "Πικάντικο τηγανητό μοσχάρι με λαχανικά",
-        dish21: "Κοτόπουλο Kung Pao",
-        dish21_desc: "Πικάντικο τηγανητό κοτόπουλο με φυστίκια",
-        dish22: "Μοσχάρι με Σάλτσα Μαύρων Φασολιών",
-        dish22_desc: "Τηγανητό μοσχάρι με σάλτσα μαύρων φασολιών και λαχανικά",
-        dish23: "Κοτόπουλο με Λεμόνι",
-        dish23_desc: "Τραγανό κοτόπουλο με σάλτσα λεμονιού",
-        dish24: "Αρνί Μογγολικό",
-        dish24_desc: "Τρυφερό αρνί με φρέσκα κρεμμυδάκια σε ειδική σάλτσα",
-        dish25: "Κοτόπουλο με Μέλι και Σκόρδο",
-        dish25_desc: "Κοτόπουλο σε γλυκιά σάλτσα μελιού και σκόρδου",
-        dish26: "Τραγανό Μοσχάρι με Τσίλι",
-        dish26_desc: "Τραγανές λωρίδες μοσχαριού με γλυκόπικρη σάλτσα τσίλι",
+        dish13_desc: "Κλασική κινέζικη πικάντικη σούπα",
+        dish14: "Σούπα Κοτόπουλου με Νουντλς",
+        dish14_desc: "Απολαυστική σούπα με κοτόπουλο και νουντλς",
+        dish15: "Σούπα Λαχανικών",
+        dish15_desc: "Ελαφριά σούπα με λαχανικά",
+        
+        dish16: "Πιάτα με Tofu",
+        dish16_desc: "TOFU με σάλτσα μανιταριών & στρειδιού / Μαύρων φασολιών / Γλυκόξινη / Κάρυ",
+        dish17: "Χορτοφαγικά Πιάτα",
+        dish17_desc: "Σάλτσα τζίντζερ / Μαύρων φασολιών / Szechuan",
+        
+        dish18: "Πιάτα με Κάρυ",
+        dish18_desc: "Όλα τα πιάτα σερβίρονται με λαχανικά",
+        dish19: "Γλυκόξινα Πιάτα",
+        dish19_desc: "Περιλαμβάνει μια ποικιλία συστατικών",
+        dish20: "Πιάτα Szechuan",
+        dish20_desc: "Πικάντικα πιάτα στυλ Szechuan",
+        dish21: "Πιάτα με Σάλτσα Στρειδιού",
+        dish21_desc: "Όλα τα πιάτα σερβίρονται με λαχανικά",
+        dish22: "Πιάτα με Σάλτσα Μαύρων Φασολιών",
+        dish22_desc: "Όλα τα πιάτα σερβίρονται με λαχανικά",
+        dish23: "Πιάτα Teriyaki",
+        dish23_desc: "Όλα τα πιάτα σερβίρονται με λαχανικά",
+        dish24: "Ταϊλανδέζικα Πιάτα",
+        dish24_desc: "Όλα τα πιάτα σερβίρονται με λαχανικά",
+        
+        dish25: "Chow Mein",
+        dish25_desc: "Επιλογές περιλαμβάνουν σερβίρισμα με λαχανικά & σάλτσα στρειδιού (Βοδινό/Κοτόπουλο), Σερβιρισμένο Ξηρό ή με Σάλτσα",
+        dish26: "Ειδικό Chow Mein του Καταστήματος",
+        dish26_desc: "Το signature chow mein πιάτο μας",
+        dish27: "Τηγανητό Ρύζι",
+        dish27_desc: "Όλα τα πιάτα περιλαμβάνουν γλυκά και πικάντικα λαχανικά",
+        dish28: "Ειδικό Τηγανητό Ρύζι Far East",
+        dish28_desc: "Το ειδικό μας τηγανητό ρύζι με premium συστατικά",
+        
+        dish29: "Πατάτες / Κράκερς Γαρίδας",
+        dish29_desc: "Επιλογές συνοδευτικών",
+        dish30: "Τηγανητό Ρύζι με Αυγό / Τηγανητό Ρύζι με Λαχανικά",
+        dish30_desc: "Επιλογές ρυζιού",
+        dish31: "Απλό Ρύζι / Μικτά Λαχανικά",
+        dish31_desc: "Απλές επιλογές συνοδευτικών",
+        dish32: "Φτερούγες Κοτόπουλου με Γλυκόξινη Σάλτσα",
+        dish32_desc: "6 κομμάτια φτερούγες κοτόπουλου",
         
         // Sushi menu translations
         hoso_maki: "Hoso Maki Ρολς (Όλα 8τεμ.)",
         maki_rolls: "Maki Ρολς (Όλα 6τεμ.)",
+        nigiri_rolls: "Nigiri Ρολς (Όλα 3τεμ.)",
+        hot_rolls: "Ζεστά Ρολς (Όλα 8τεμ.)",
         sushi_platters: "Πιατέλες Sushi",
         
         sushi101: "Far East California Roll",
         sushi101_desc: "Αγγούρι, crabstick, καρότο, αβοκάντο με χαβιάρι & ιαπωνική μαγιονέζα από πάνω",
         sushi102: "Dragon Roll",
         sushi102_desc: "Κρέμα τυρί, tempura γαρίδα, αγγούρι με αβοκάντο, σάλτσα χέλιου & σουσάμι από πάνω",
-        sushi103: "Rainbow Roll",
-        sushi103_desc: "California roll με διάφορα sashimi από πάνω",
-        sushi104: "Spicy Tuna Roll",
-        sushi104_desc: "Πικάντικη τόννος με αγγούρι και αβοκάντο",
-        sushi105: "Spicy Salmon Roll",
-        sushi105_desc: "Σολομός tempura, αβοκάντο, κρέμα τυρί (φρέσκος σολομός, πικάντικη μαγιονέζα, χαβιάρι & σχοινόπρασο από πάνω)",
+        sushi103: "Crunchy Roll",
+        sushi103_desc: "Tempura γαρίδα, αγγούρι, αβοκάντο με τραγανά κομμάτια tempura από πάνω",
+        sushi104: "Ebi Roll",
+        sushi104_desc: "Γαρίδα ebi, αβοκάντο, αγγούρι με τραγανά κομμάτια tempura από πάνω",
+        sushi105: "Spicy Tuna Roll",
+        sushi105_desc: "Φρέσκα κομμένα τόνος, αγγούρι, πικάντικη μαγιονέζα, togarashi, φρέσκο κρεμμύδι (σουσάμι & togarashi από πάνω)",
         sushi106: "Λαχανικό Roll",
         sushi106_desc: "Αβοκάντο, μάνγκο, καρότο, αγγούρι (σουσάμι από πάνω)",
         sushi107: "Philadelphia Roll",
@@ -1918,16 +1898,30 @@
         sushi110_desc: "Crabstick, καρότο, αβοκάντο, αγγούρι, μάνγκο, κρέμα τυρί (κέλυφος καβουριού, χαβιάρι & φρέσκο κρεμμύδι από πάνω)",
         sushi111: "Far East Caterpillar Roll",
         sushi111_desc: "Κρέμα τυρί, χέλι, αγγούρι, γαρίδα ebi (αβοκάντο, σάλτσα χέλιου & χαβιάρι από πάνω)",
+        
         sushi112: "Τόνος Maki",
         sushi113: "Αγγούρι Maki",
         sushi114: "Σολομός Maki",
-        sushi115: "Αβοκάντο Maki",
+        sushi115: "Crabstick Maki",
+        sushi116: "Αβοκάντο Maki",
+        
+        sushi117: "Αβοκάντο Nigiri",
+        sushi118: "Σολομός Nigiri",
+        sushi119: "Τόνος Nigiri",
+        sushi120: "Crabstick Nigiri",
+        sushi121: "Χέλι Nigiri",
+        
+        sushi122: "Σολομός Tempura Roll",
+        sushi122_desc: "Σολομός tempura, αβοκάντο (τραγανά κομμάτια tempura, σουσάμι & σάλτσα χέλιου από πάνω)",
+        sushi123: "Τραγανό Τόνος Roll",
+        sushi123_desc: "Τόνος, αβοκάντο (τραγανά κομμάτια tempura & πικάντικη μαγιονέζα από πάνω)",
+        
         sushi124: "Συνδυασμός Fusion 24τεμ.",
         sushi124_desc: "Far East California Ρολς, Λαχανικά Ρολς, Crunchy Ρολς",
-        sushi125: "Πιατέλα Deluxe Sushi 36τεμ.",
-        sushi125_desc: "Διάφορα nigiri, sashimi και ειδικά ρολς",
-        sushi126: "Χορτοφαγική Πιατέλα 24τεμ.",
-        sushi126_desc: "Διάφορα χορτοφαγικά ρολς και nigiri",
+        sushi125: "Συνδυασμός Far East 32τεμ.",
+        sushi125_desc: "Chef's Ρολς, Λαχανικά Ρολς, Spicy Salmon Ρολς, Ebi Ρολς",
+        sushi126: "Συνδυασμός 48τεμ.",
+        sushi126_desc: "Far East California Ρολς, Λαχανικά Ρολς, Spicy Salmon Ρολς, Ebi Ρολς, Philadelphia Ρολς, Far East Caterpillar Ρολς",
         
         form_success: "Το μήνυμα σας εστάλη με επιτυχία!",
         form_error: "Σφάλμα κατά την αποστολή. Παρακαλώ δοκιμάστε ξανά."
@@ -1976,6 +1970,12 @@
           menuSections.forEach(section => {
             if (section.id === `${tabName}-menu`) {
               section.classList.remove('hidden');
+              
+              // Show first category of the new menu
+              const firstButton = section.querySelector('.menu-category-button');
+              if (firstButton) {
+                firstButton.click();
+              }
             } else {
               section.classList.add('hidden');
             }
@@ -1983,26 +1983,47 @@
         });
       });
 
-      // Toggle menu categories on mobile
-      document.querySelectorAll('.menu-category-title').forEach(title => {
-        title.addEventListener('click', function() {
-          if (window.innerWidth <= 850) {
-            const categoryContent = this.nextElementSibling;
-            const isExpanded = categoryContent.classList.contains('expanded');
-            const lang = document.documentElement.getAttribute('data-lang') || 'en';
+      // Category button functionality
+      function setupCategoryButtons(buttonsContainer) {
+        const buttons = buttonsContainer.querySelectorAll('.menu-category-button');
+        const categories = buttonsContainer.parentElement.querySelectorAll('.menu-category');
+        
+        buttons.forEach(button => {
+          button.addEventListener('click', function() {
+            const categoryId = this.getAttribute('data-category');
             
-            this.classList.toggle('expanded');
-            categoryContent.classList.toggle('expanded');
-          }
-        });
-      });
-
-      // Collapse all menu categories by default on mobile
-      if (window.innerWidth <= 850) {
-        document.querySelectorAll('.menu-category-content').forEach(content => {
-          content.classList.remove('expanded');
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding category
+            categories.forEach(category => {
+              if (category.id === categoryId) {
+                category.classList.add('active');
+              } else {
+                category.classList.remove('active');
+              }
+            });
+            
+            // Scroll to category
+            const categoryElement = document.getElementById(categoryId);
+            if (categoryElement) {
+              categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
         });
       }
+      
+      // Setup category buttons for both menus
+      const chineseButtons = document.getElementById('chinese-category-buttons');
+      const sushiButtons = document.getElementById('sushi-category-buttons');
+      
+      if (chineseButtons) setupCategoryButtons(chineseButtons);
+      if (sushiButtons) setupCategoryButtons(sushiButtons);
+      
+      // Show first category by default
+      const firstChineseButton = document.querySelector('#chinese-category-buttons .menu-category-button');
+      if (firstChineseButton) firstChineseButton.click();
 
       // smooth scroll to sections accounting for fixed header
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -2104,5 +2125,4 @@
     });
   </script>
 </body>
-
 </html>
